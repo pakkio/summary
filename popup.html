@@ -24,7 +24,7 @@
       background-color: #fff;
       resize: vertical;
     }
-    #summarizeButton, #stopButton {
+    #summarizeButton, #stopButton, #evaluateButton {
       margin-bottom: 10px;
       padding: 5px 10px;
       border: none;
@@ -37,6 +37,10 @@
     }
     #stopButton {
       background-color: #f44336;
+      color: white;
+    }
+    #evaluateButton {
+      background-color: #2196F3;
       color: white;
     }
     #stopButton.disabled {
@@ -69,33 +73,35 @@
   </style>
 </head>
 <body>
-  <h1>LMStudio Summarizer</h1>
-  <div id="controls">
-    <textarea id="prompt" placeholder="Enter your prompt here">summarize this page in English</textarea>
-    <label for="temperature">Temperature:</label>
-    <select id="temperature">
-      <option value="0">Strict (T=0)</option>
-      <option value="0.5">Average (T=0.5)</option>
-      <option value="0.8" selected>Creative (T=0.8)</option>
-    </select>
-    <label for="fontSize">Font Size:</label>
-    <select id="fontSize">
-      <option value="small">Small</option>
-      <option value="medium" selected>Medium</option>
-      <option value="large">Large</option>
-    </select>
-    <label for="fontFamily">Font Family:</label>
-    <select id="fontFamily">
-      <option value="Arial" selected>Arial</option>
-      <option value="Times New Roman">Times New Roman</option>
-      <option value="Courier New">Courier New</option>
-      <option value="Georgia">Georgia</option>
-      <option value="Verdana">Verdana</option>
-    </select>
-  </div>
-  <button id="summarizeButton">Submit</button>
-  <button id="stopButton" class="disabled" disabled>Stop</button>
-  <div id="summary"></div>
-  <script src="popup.js"></script>
+<h1>LMStudio Summarizer</h1>
+<div id="controls">
+  <textarea id="prompt" placeholder="Enter your prompt here">summarize this page in English</textarea>
+  <label for="temperature">Temperature:</label>
+  <select id="temperature">
+    <option value="0">Strict (T=0)</option>
+    <option value="0.5">Average (T=0.5)</option>
+    <option value="0.8" selected>Creative (T=0.8)</option>
+  </select>
+  <label for="fontSize">Font Size:</label>
+  <select id="fontSize">
+    <option value="small">Small</option>
+    <option value="medium" selected>Medium</option>
+    <option value="large">Large</option>
+  </select>
+  <label for="fontFamily">Font Family:</label>
+  <select id="fontFamily">
+    <option value="Arial" selected>Arial</option>
+    <option value="Times New Roman">Times New Roman</option>
+    <option value="Courier New">Courier New</option>
+    <option value="Georgia">Georgia</option>
+    <option value="Verdana">Verdana</option>
+  </select>
+</div>
+<button id="summarizeButton">Submit</button>
+<button id="stopButton" class="disabled" disabled>Stop</button>
+<button id="evaluateButton">Evaluate</button>
+<div id="evaluation"></div>
+<div id="summary"></div>
+<script src="popup.js"></script>
 </body>
 </html>
