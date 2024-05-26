@@ -5,29 +5,92 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      font-size: 16px; /* Aumenta la dimensione del font per il corpo */
-      width: 300px;
-      height: 200px;
+      font-size: 16px;
+      width: 400px;
+      height: 600px;
       padding: 10px;
       overflow: hidden;
+      resize: both;
+      background-color: #f0f0f0;
     }
     #summary {
-      font-size: 14px; /* Aumenta la dimensione del font per il riassunto */
+      font-size: 14px;
       white-space: pre-wrap;
       word-wrap: break-word;
-      max-height: 150px;
+      height: 300px;
       overflow-y: auto;
       border: 1px solid #ccc;
       padding: 10px;
+      background-color: #fff;
+      resize: vertical;
+    }
+    #summarizeButton, #stopButton {
+      margin-bottom: 10px;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
     }
     #summarizeButton {
+      background-color: #4CAF50;
+      color: white;
+    }
+    #stopButton {
+      background-color: #f44336;
+      color: white;
+    }
+    #controls {
       margin-bottom: 10px;
+    }
+    .font-size-option {
+      margin-right: 5px;
+    }
+    textarea {
+      width: 100%;
+      height: 60px;
+      margin-bottom: 10px;
+      resize: vertical;
+      padding: 5px;
+      font-family: inherit;
+    }
+    select, button {
+      margin-top: 5px;
+      padding: 5px;
+      font-family: inherit;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>Page Summary</h1>
-  <button id="summarizeButton">Summarize Page</button>
+  <h1>LMStudio Summarizer</h1>
+  <div id="controls">
+    <textarea id="prompt" placeholder="Enter your prompt here">summarize this page in English</textarea>
+    <label for="temperature">Temperature:</label>
+    <select id="temperature">
+      <option value="0">Strict (T=0)</option>
+      <option value="0.5">Average (T=0.5)</option>
+      <option value="0.8" selected>Creative (T=0.8)</option>
+    </select>
+    <label for="fontSize">Font Size:</label>
+    <select id="fontSize">
+      <option value="small">Small</option>
+      <option value="medium" selected>Medium</option>
+      <option value="large">Large</option>
+    </select>
+    <label for="fontFamily">Font Family:</label>
+    <select id="fontFamily">
+      <option value="Arial" selected>Arial</option>
+      <option value="Times New Roman">Times New Roman</option>
+      <option value="Courier New">Courier New</option>
+      <option value="Georgia">Georgia</option>
+      <option value="Verdana">Verdana</option>
+    </select>
+  </div>
+  <button id="summarizeButton">Submit</button>
+  <button id="stopButton">Stop</button>
   <div id="summary"></div>
   <script src="popup.js"></script>
 </body>

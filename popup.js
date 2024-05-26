@@ -1,4 +1,16 @@
-document.getElementById('summarizeButton').addEventListener('click', async () => {
+let controller;
+
+document.getElementById('summarizeButton').addEventListener('click', () => {
+  const prompt = document.getElementById('prompt').value || 'summarize this page in English';
+  const temperature = parseFloat(document.getElementById('temperature').value);
+  const fontSize = document.getElementById('fontSize').value;
+  const fontFamily = document.getElementById('fontFamily').value;
+  const summaryElement = document.getElementById('summary');
+  
+  // Set font size and font family
+  summaryElement.style.fontSize = fontSize === 'small' ? '12px' : fontSize === 'medium' ? '14px' : '18px';
+  summaryElement.style.fontFamily = fontFamily;
+
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.scripting.executeScript(
       {
@@ -8,52 +20,67 @@ document.getElementById('summarizeButton').addEventListener('click', async () =>
       async (results) => {
         if (results && results[0] && results[0].result) {
           const pageContent = results[0].result;
-          const summaryElement = document.getElementById('summary');
           summaryElement.textContent = ''; // Clear previous summary
 
-          const response = await fetch('http://localhost:1234/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer lm-studio'
-            },
-            body: JSON.stringify({
-              model: 'behnamoh/Phi-3-medium-4k-instruct-Q4_0-GGUF',
-              messages: [
-                { role: 'system', content: 'Summarize the following text:' },
-                { role: 'user', content: pageContent }
-              ],
-              temperature: 0.7,
-              stream: true // Ensure streaming is enabled on the server-side
-            })
-          });
+          controller = new AbortController();
+          const signal = controller.signal;
 
-          const reader = response.body.getReader();
-          const decoder = new TextDecoder();
-          let partialMessage = '';
+          try {
+            const response = await fetch('http://localhost:1234/v1/chat/completions', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer lm-studio'
+              },
+              body: JSON.stringify({
+                model: 'behnamoh/Phi-3-medium-4k-instruct-Q4_0-GGUF',
+                messages: [
+                  { role: 'system', content: prompt },
+                  { role: 'user', content: pageContent }
+                ],
+                temperature: temperature,
+                stream: true // Ensure streaming is enabled on the server-side
+              }),
+              signal: signal
+            });
 
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let partialMessage = '';
 
-            partialMessage += decoder.decode(value, { stream: true });
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
 
-            const messages = partialMessage.split('\n');
-            for (let i = 0; i < messages.length - 1; i++) {
-              if (messages[i].startsWith('data: ')) {
-                const message = JSON.parse(messages[i].substring(6));
-                if (message.choices && message.choices[0] && message.choices[0].delta && message.choices[0].delta.content) {
-                  summaryElement.textContent += message.choices[0].delta.content;
-                  summaryElement.scrollTop = summaryElement.scrollHeight; // Scroll to the bottom
+              partialMessage += decoder.decode(value, { stream: true });
+
+              const messages = partialMessage.split('\n');
+              for (let i = 0; i < messages.length - 1; i++) {
+                if (messages[i].startsWith('data: ')) {
+                  const message = JSON.parse(messages[i].substring(6));
+                  if (message.choices && message.choices[0] && message.choices[0].delta && message.choices[0].delta.content) {
+                    summaryElement.textContent += message.choices[0].delta.content;
+                    summaryElement.scrollTop = summaryElement.scrollHeight; // Scroll to the bottom
+                  }
                 }
               }
+              partialMessage = messages[messages.length - 1];
             }
-            partialMessage = messages[messages.length - 1];
+          } catch (error) {
+            console.error('Error fetching summary:', error);
           }
+        } else {
+          console.error('Error getting page content:', results);
         }
       }
     );
   });
+});
+
+document.getElementById('stopButton').addEventListener('click', () => {
+  if (controller) {
+    controller.abort();
+  }
 });
 
 function getPageContent() {
