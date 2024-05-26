@@ -39,6 +39,10 @@
       background-color: #f44336;
       color: white;
     }
+    #stopButton.disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
     #controls {
       margin-bottom: 10px;
     }
@@ -90,7 +94,7 @@
     </select>
   </div>
   <button id="summarizeButton">Submit</button>
-  <button id="stopButton">Stop</button>
+  <button id="stopButton" class="disabled" disabled>Stop</button>
   <div id="summary"></div>
   <script src="popup.js"></script>
 </body>

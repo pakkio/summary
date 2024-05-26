@@ -6,10 +6,15 @@ document.getElementById('summarizeButton').addEventListener('click', () => {
   const fontSize = document.getElementById('fontSize').value;
   const fontFamily = document.getElementById('fontFamily').value;
   const summaryElement = document.getElementById('summary');
-  
+  const stopButton = document.getElementById('stopButton');
+
   // Set font size and font family
   summaryElement.style.fontSize = fontSize === 'small' ? '12px' : fontSize === 'medium' ? '14px' : '18px';
   summaryElement.style.fontFamily = fontFamily;
+
+  // Enable stop button
+  stopButton.disabled = false;
+  stopButton.classList.remove('disabled');
 
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.scripting.executeScript(
@@ -68,9 +73,15 @@ document.getElementById('summarizeButton').addEventListener('click', () => {
             }
           } catch (error) {
             console.error('Error fetching summary:', error);
+          } finally {
+            // Disable stop button after fetching is complete
+            stopButton.disabled = true;
+            stopButton.classList.add('disabled');
           }
         } else {
           console.error('Error getting page content:', results);
+          stopButton.disabled = true;
+          stopButton.classList.add('disabled');
         }
       }
     );
@@ -80,6 +91,9 @@ document.getElementById('summarizeButton').addEventListener('click', () => {
 document.getElementById('stopButton').addEventListener('click', () => {
   if (controller) {
     controller.abort();
+    // Disable stop button after aborting
+    document.getElementById('stopButton').disabled = true;
+    document.getElementById('stopButton').classList.add('disabled');
   }
 });
 
