@@ -39,6 +39,6 @@ Per installare l'estensione su Chrome, segui questi passaggi:
 Per utilizzare correttamente l'estensione, è necessario che il server LMStudio sia in esecuzione. Segui questi passaggi per lanciare LMStudio:
 
 1. **Scarica LMStudio**: Vai al sito ufficiale di LMStudio e scarica l'ultima versione disponibile.
-2. **Scarica il modello**: Scarica il modello di linguaggio necessario per generare i riassunti.
+2. **Scarica il modello**: Scarica il modello di linguaggio necessario per generare i riassunti. Il modello e' preferibile che sia piccolo, ma con una lunghezza di contesto maggiore di 8K se possibile. Con 10K token ho ottenuto buoni risultati con 8G di Vram, di piu' rischia di non stare nella vram o di essere troppo lento.
 4. **Lancia il server**: Esegui il comando per avviare LMStudio come server.
    
