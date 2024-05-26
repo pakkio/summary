@@ -5,20 +5,24 @@
   "description": "Summarize the current page using LMStudio.",
   "permissions": [
     "activeTab",
-    "scripting"
+    "scripting",
+    "http://your-server-address/*"  // Replace with your actual server address (if not localhost)
   ],
   "background": {
     "service_worker": "background.js"
   },
   "action": {
     "default_popup": "popup.html",
-    "default_popup_width": 800,
-    "default_popup_height": 1000
+    "default_popup_width": 500, 
+    "default_popup_height": 700
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"]
     }
-  ]
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
 }
