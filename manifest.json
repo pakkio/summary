@@ -1,20 +1,27 @@
 {
   "manifest_version": 3,
   "name": "LMStudio Summarizer",
-  "version": "1.0",
-  "description": "Summarize the current page using LMStudio.",
+  "version": "1.1",
+  "description": "Summarize web pages using LMStudio API.",
   "permissions": [
     "activeTab",
     "scripting",
-    "http://your-server-address/*"  // Replace with your actual server address (if not localhost)
+    "storage"
+  ],
+  "host_permissions": [
+    "http://localhost:1234/*"
   ],
   "background": {
     "service_worker": "background.js"
   },
   "action": {
     "default_popup": "popup.html",
-    "default_popup_width": 500, 
-    "default_popup_height": 700
+    "default_icon": {
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "128": "icon128.png"
   },
   "content_scripts": [
     {
@@ -24,5 +31,6 @@
   ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
-  }
+  },
+  "options_page": "options.html"
 }

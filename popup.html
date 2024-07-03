@@ -1,162 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LMStudio Summarizer</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      font-size: 16px;
-      padding: 10px;
-      overflow: hidden;
-      resize: both;
-      min-width: 400px;
-      min-height: 600px;
-      background-color: #f0f0f0;
-    }
-
-    #summary {
-      font-size: 14px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      height: 300px;
-      overflow-y: auto;
-      border: 1px solid #ccc;
-      padding: 10px;
-      background-color: #fff;
-      resize: vertical;
-    }
-
-    #summarizeButton, #stopButton, #evaluateButton, #clearButton {
-      margin-bottom: 10px;
-      padding: 5px 10px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    #summarizeButton {
-      background-color: #4CAF50;
-      color: white;
-    }
-
-    #stopButton {
-      background-color: #f44336;
-      color: white;
-    }
-	
-	#clearButton {
-      background-color: #ffa500;
-      color: white;
-    }
-
-    #evaluateButton {
-      background-color: #2196F3;
-      color: white;
-    }
-
-    #stopButton.disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-
-    #controls {
-      margin-bottom: 10px;
-    }
-
-    .font-size-option {
-      margin-right: 5px;
-    }
-
-    textarea {
-      width: 100%;
-      height: 60px;
-      margin-bottom: 10px;
-      resize: vertical;
-      padding: 5px;
-      font-family: inherit;
-    }
-
-    select, button {
-      margin-top: 5px;
-      padding: 5px;
-      font-family: inherit;
-    }
-
-    label {
-      display: block;
-      margin-top: 10px;
-    }
-
-    #font-options {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    #font-options label {
-      margin-right: 5px;
-    }
-
-    #resize-handle {
-      width: 20px;
-      height: 20px;
-      background-color: #ccc;
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      cursor: nwse-resize;
-    }
-
-    #loading-indicator {
-      display: none; /* Hidden by default */
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>LMStudio Summarizer</h1>
-  <div id="controls">
-    <textarea id="prompt" placeholder="Enter your prompt here">summarize this page in English</textarea>
+  <header>
+    <h1>LMStudio Summarizer</h1>
+  </header>
+  
+  <main>
+    <section id="controls">
+      <textarea id="prompt" placeholder="Enter your prompt here"></textarea>
+      
+      <div class="control-group">
+        <label for="temperature" title="Controls the creativity of the summary. Higher values are more creative.">Temperature:</label>
+        <select id="temperature">
+          <option value="0">Strict (T=0)</option>
+          <option value="0.5">Average (T=0.5)</option>
+          <option value="0.8" selected>Creative (T=0.8)</option>
+        </select>
+      </div>
 
-    <label for="temperature" title="Controls the creativity of the summary. Higher values are more creative.">Temperature:</label>
-    <select id="temperature">
-      <option value="0">Strict (T=0)</option>
-      <option value="0.5">Average (T=0.5)</option>
-      <option value="0.8" selected>Creative (T=0.8)</option>
-    </select>
+      <div class="control-group">
+        <label for="fontSize">Font Size:</label>
+        <select id="fontSize">
+          <option value="small">Small</option>
+          <option value="medium" selected>Medium</option>
+          <option value="large">Large</option>
+        </select>
+      </div>
 
-    <div id="font-options">
-      <label for="fontSize">Font Size:</label>
-      <select id="fontSize">
-        <option value="small">Small</option>
-        <option value="medium" selected>Medium</option>
-        <option value="large">Large</option>
-      </select>
+      <div class="control-group">
+        <label for="fontFamily">Font Family:</label>
+        <select id="fontFamily">
+          <option value="Arial" selected>Arial</option>
+          <option value="Times New Roman">Times New Roman</option>
+          <option value="Courier New">Courier New</option>
+          <option value="Georgia">Georgia</option>
+          <option value="Verdana">Verdana</option>
+        </select>
+      </div>
+    </section>
 
-      <label for="fontFamily">Font Family:</label>
-      <select id="fontFamily">
-        <option value="Arial" selected>Arial</option>
-        <option value="Times New Roman">Times New Roman</option>
-        <option value="Courier New">Courier New</option>
-        <option value="Georgia">Georgia</option>
-        <option value="Verdana">Verdana</option>
-      </select>
-    </div>
-  </div>
+    <section id="actions">
+      <button id="summarizeButton" class="primary">Summarize</button>
+      <button id="stopButton" class="secondary" disabled>Stop</button>
+      <button id="evaluateButton" class="secondary">Evaluate</button>
+      <button id="clearButton" class="secondary">Clear</button>
+    </section>
 
-  <button id="summarizeButton">Submit</button>
-  <button id="stopButton" class="disabled" disabled>Stop</button>
-  <button id="evaluateButton">Evaluate</button>
-  <button id="clearButton">Clear Summary</button> 
+    <section id="output">
+      <div id="loading-indicator" aria-hidden="true">Summarizing...</div>
+      <div id="evaluation"></div>
+      <div id="summary" tabindex="0" aria-live="polite"></div>
+    </section>
+  </main>
 
-  <div id="loading-indicator">Loading...</div> 
-  <div id="evaluation"></div>
-  <div id="summary"></div>
+  <footer>
+    <a href="#" id="optionsLink">Options</a>
+    <div id="resize-handle" aria-hidden="true"></div>
+  </footer>
 
-  <div id="resize-handle"></div>
-<script src="popup.js"></script> 
+  <script src="popup.js"></script>
 </body>
 </html>
