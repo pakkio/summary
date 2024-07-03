@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LMStudio Summarizer Options</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input[type="text"], select {
+      width: 100%;
+      padding: 5px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <h1>LMStudio Summarizer Options</h1>
+  
+  <label for="apiKey">LMStudio API Key:</label>
+  <input type="text" id="apiKey" placeholder="Enter your API key">
+
+  <label for="serverUrl">LMStudio Server URL:</label>
+  <input type="text" id="serverUrl" placeholder="Enter server URL">
+
+  <label for="defaultModel">Default Model:</label>
+  <select id="defaultModel">
+    <option value="behnamoh/Phi-3-medium-4k-instruct-Q4_0-GGUF">Phi-3-medium-4k-instruct</option>
+    <!-- Add more model options here as needed -->
+  </select>
+
+  <label for="defaultPrompt">Default Summarization Prompt:</label>
+  <input type="text" id="defaultPrompt" placeholder="Enter default prompt">
+
+  <button id="saveOptions">Save Options</button>
+
+  <script src="options.js"></script>
+</body>
+</html>
