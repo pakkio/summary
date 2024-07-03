@@ -5,64 +5,101 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LMStudio Summarizer</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      width: 600px;
+      height: 400px;
+      margin: 0;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    #popup-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      padding: 10px;
+    }
+    #summary {
+      overflow-y: auto;
+      height: 200px;
+      margin-top: 10px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #close-popup {
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>LMStudio Summarizer</h1>
-  </header>
+  <div id="popup-container">
+    <header>
+      <h1>LMStudio Summarizer</h1>
+      <button id="close-popup">&times;</button>
+    </header>
   
-  <main>
-    <section id="controls">
-      <textarea id="prompt" placeholder="Enter your prompt here"></textarea>
-      
-      <div class="control-group">
-        <label for="temperature" title="Controls the creativity of the summary. Higher values are more creative.">Temperature:</label>
-        <select id="temperature">
-          <option value="0">Strict (T=0)</option>
-          <option value="0.5">Average (T=0.5)</option>
-          <option value="0.8" selected>Creative (T=0.8)</option>
-        </select>
-      </div>
+    <main>
+      <section id="controls">
+        <textarea id="prompt" placeholder="Enter your prompt here" style="width: 100%; height: 50px;"></textarea>
+        
+        <div class="control-group">
+          <label for="temperature" title="Controls the creativity of the summary. Higher values are more creative.">Temperature:</label>
+          <select id="temperature">
+            <option value="0">Strict (T=0)</option>
+            <option value="0.5">Average (T=0.5)</option>
+            <option value="0.8" selected>Creative (T=0.8)</option>
+          </select>
+        </div>
 
-      <div class="control-group">
-        <label for="fontSize">Font Size:</label>
-        <select id="fontSize">
-          <option value="small">Small</option>
-          <option value="medium" selected>Medium</option>
-          <option value="large">Large</option>
-        </select>
-      </div>
+        <div class="control-group">
+          <label for="fontSize">Font Size:</label>
+          <select id="fontSize">
+            <option value="small">Small</option>
+            <option value="medium" selected>Medium</option>
+            <option value="large">Large</option>
+          </select>
+        </div>
 
-      <div class="control-group">
-        <label for="fontFamily">Font Family:</label>
-        <select id="fontFamily">
-          <option value="Arial" selected>Arial</option>
-          <option value="Times New Roman">Times New Roman</option>
-          <option value="Courier New">Courier New</option>
-          <option value="Georgia">Georgia</option>
-          <option value="Verdana">Verdana</option>
-        </select>
-      </div>
-    </section>
+        <div class="control-group">
+          <label for="fontFamily">Font Family:</label>
+          <select id="fontFamily">
+            <option value="Arial" selected>Arial</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Verdana">Verdana</option>
+          </select>
+        </div>
+      </section>
 
-    <section id="actions">
-      <button id="summarizeButton" class="primary">Summarize</button>
-      <button id="stopButton" class="secondary" disabled>Stop</button>
-      <button id="evaluateButton" class="secondary">Evaluate</button>
-      <button id="clearButton" class="secondary">Clear</button>
-    </section>
+      <section id="actions">
+        <button id="summarizeButton" class="primary">Summarize</button>
+        <button id="stopButton" class="secondary" disabled>Stop</button>
+        <button id="evaluateButton" class="secondary">Evaluate</button>
+        <button id="clearButton" class="secondary">Clear</button>
+        <button id="copyButton" class="secondary">Copy to Clipboard</button>
+      </section>
 
-    <section id="output">
-      <div id="loading-indicator" aria-hidden="true">Summarizing...</div>
-      <div id="evaluation"></div>
-      <div id="summary" tabindex="0" aria-live="polite"></div>
-    </section>
-  </main>
-
-  <footer>
-    <a href="#" id="optionsLink">Options</a>
-    <div id="resize-handle" aria-hidden="true"></div>
-  </footer>
+      <section id="output">
+        <div id="loading-indicator" aria-hidden="true">Summarizing...</div>
+        <div id="evaluation"></div>
+        <div id="summary" tabindex="0" aria-live="polite"></div>
+      </section>
+    </main>
+  </div>
 
   <script src="popup.js"></script>
 </body>

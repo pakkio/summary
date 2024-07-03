@@ -3,6 +3,7 @@ let controller;
 document.addEventListener('DOMContentLoaded', () => {
   loadSettings();
   setupEventListeners();
+  makePopupDraggable();
 });
 
 function loadSettings() {
@@ -20,10 +21,11 @@ function setupEventListeners() {
   document.getElementById('stopButton').addEventListener('click', stopSummarization);
   document.getElementById('evaluateButton').addEventListener('click', evaluateContent);
   document.getElementById('clearButton').addEventListener('click', clearSummary);
+  document.getElementById('copyButton').addEventListener('click', copyToClipboard);
   document.getElementById('fontSize').addEventListener('change', updateSummaryStyle);
   document.getElementById('fontFamily').addEventListener('change', updateSummaryStyle);
   document.getElementById('optionsLink').addEventListener('click', openOptions);
-  setupResizeHandle();
+  document.getElementById('close-popup').addEventListener('click', closePopup);
 }
 
 function openOptions() {
@@ -130,6 +132,16 @@ function clearSummary() {
   document.getElementById('evaluation').textContent = '';
 }
 
+function copyToClipboard() {
+  const summaryElement = document.getElementById('summary');
+  const range = document.createRange();
+  range.selectNode(summaryElement);
+  window.getSelection().removeAllRanges();
+  window.getSelection().addRange(range);
+  document.execCommand('copy');
+  window.getSelection().removeAllRanges();
+}
+
 function updateSummaryStyle() {
   const summaryElement = document.getElementById('summary');
   const fontSize = document.getElementById('fontSize').value;
@@ -179,18 +191,29 @@ function getStoredOptions() {
   });
 }
 
-function setupResizeHandle() {
-  const resizeHandle = document.getElementById('resize-handle');
-  let isResizing = false;
+function makePopupDraggable() {
+  const popupContainer = document.getElementById('popup-container');
+  let isDragging = false;
+  let offsetX, offsetY;
 
-  resizeHandle.addEventListener('mousedown', () => isResizing = true);
+  popupContainer.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    offsetX = e.clientX - popupContainer.getBoundingClientRect().left;
+    offsetY = e.clientY - popupContainer.getBoundingClientRect().top;
+  });
 
   document.addEventListener('mousemove', (e) => {
-    if (isResizing) {
-      document.documentElement.style.width = `${e.clientX}px`;
-      document.documentElement.style.height = `${e.clientY}px`;
+    if (isDragging) {
+      popupContainer.style.left = `${e.clientX - offsetX}px`;
+      popupContainer.style.top = `${e.clientY - offsetY}px`;
     }
   });
 
-  document.addEventListener('mouseup', () => isResizing = false);
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+  });
+}
+
+function closePopup() {
+  document.getElementById('popup-container').style.display = 'none';
 }
